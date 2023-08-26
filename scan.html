@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>QR Code Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://raw.githubusercontent.com/zxing/zxing/26275d166a41470cbba8f41c41528e0c53cc89d2/javascript/zxing.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <video id="video"></video>
+    </div>
+    <div>
+      <button id="scan">Scan QR Code</button>
+    </div>
+    <script>
+      var video = document.getElementById('video');
+      var scanBtn = document.getElementById('scan');
+
+      scanBtn.addEventListener('click', function() {
+        var decodeStart = Date.now();
+
+        // 啟動攝影機
+        navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+
+          var canvas = document.createElement('canvas');
+          var context = canvas.getContext('2d');
+
+          // 設定每秒擷取圖片的次數
+          var tick = setInterval(function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            var code = zxing.read(imageData);
+
+            if (code) {
+              clearInterval(tick);
+              video.pause();
+              stream.getTracks()[0].stop();
+              var url = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/viewform?usp=pp_url&entry.871287811=' + code;
+              window.open(url, '_blank');
+            }
+          }, 1000 / 30); // 每秒擷取30次圖片
+        }).catch(function(error) {
+          console.log(error);
+        });
+      });
+    </script>
+  </body>
+</html>
+
