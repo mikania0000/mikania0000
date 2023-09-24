@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner6</title>
+    <title>QR Code Scanner7</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -39,11 +39,20 @@
         #submit-button {
             display: none; /* 初始隱藏提交按鈕 */
         }
+
+        select {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner6</h1>
+    <h1>QR Code Scanner7</h1>
     
+    <select id="camera-selector">
+        <option value="user">前鏡頭</option>
+        <option value="environment">後鏡頭</option>
+    </select>
+
     <div id="scanner-container">
         <video id="preview" playsinline autoplay></video>
     </div>
@@ -51,7 +60,7 @@
     <div id="result-container">
         <h2>Scan Result:</h2>
         <p id="scan-result"></p>
-        <button id="confirm-button">確定6</button>
+        <button id="confirm-button">確定7</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
@@ -59,6 +68,7 @@
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
         let scanResult = ''; // 用於存儲掃描結果
+        let selectedCamera = 'user'; // 初始選擇前鏡頭
 
         // 初始化QR Code掃描器
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
@@ -74,18 +84,39 @@
             document.getElementById('confirm-button').style.display = 'block';
         });
 
-        // 啟動攝像頭
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                scanner.start(cameras[0]); // 使用第一個攝像頭
-                // 顯示掃描器容器
-                document.getElementById('scanner-container').style.display = 'block';
-            } else {
-                alert('找不到攝像頭');
-            }
-        }).catch(function (error) {
-            console.error(error);
+        // 選擇鏡頭的下拉菜單事件
+        document.getElementById('camera-selector').addEventListener('change', function () {
+            selectedCamera = this.value;
+
+            // 停止掃描
+            scanner.stop();
+
+            // 重新啟動掃描器
+            startScanner(selectedCamera);
         });
+
+        // 啟動QR Code掃描器的函數
+        function startScanner(camera) {
+            Instascan.Camera.getCameras().then(function (cameras) {
+                let selectedCameraIndex = 0;
+                if (camera === 'environment') {
+                    // 如果選擇後鏡頭，則使用最後一個攝像頭
+                    selectedCameraIndex = cameras.length - 1;
+                }
+                if (cameras.length > 0) {
+                    scanner.start(cameras[selectedCameraIndex]);
+                    // 顯示掃描器容器
+                    document.getElementById('scanner-container').style.display = 'block';
+                } else {
+                    alert('找不到攝像頭');
+                }
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+
+        // 初始啟動掃描器
+        startScanner(selectedCamera);
 
         // 確認按鈕點擊事件
         document.getElementById('confirm-button').addEventListener('click', function () {
