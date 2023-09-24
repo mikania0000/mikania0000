@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner5</title>
+    <title>QR Code Scanner6</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -42,16 +42,16 @@
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner5</h1>
+    <h1>QR Code Scanner6</h1>
     
     <div id="scanner-container">
-        <video id="preview"></video>
+        <video id="preview" playsinline autoplay></video>
     </div>
 
     <div id="result-container">
         <h2>Scan Result:</h2>
         <p id="scan-result"></p>
-        <button id="confirm-button">確定5</button>
+        <button id="confirm-button">確定6</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
@@ -59,42 +59,33 @@
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
         let scanResult = ''; // 用於存儲掃描結果
-        let scanner;
 
         // 初始化QR Code掃描器
-        function initializeScanner() {
-            scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
 
-            // 監聽掃描到QR Code事件
-            scanner.addListener('scan', function (content) {
-                // 顯示掃描結果
-                scanResult = content;
-                document.getElementById('scan-result').textContent = content;
+        // 監聽掃描到QR Code事件
+        scanner.addListener('scan', function (content) {
+            // 顯示掃描結果
+            scanResult = content;
+            document.getElementById('scan-result').textContent = content;
 
-                // 顯示掃描結果容器
-                document.getElementById('result-container').style.display = 'block';
-                document.getElementById('confirm-button').style.display = 'block';
-            });
-        }
+            // 顯示掃描結果容器
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('confirm-button').style.display = 'block';
+        });
 
         // 啟動攝像頭
-        function startCamera() {
-            Instascan.Camera.getCameras().then(function (cameras) {
-                if (cameras.length > 0) {
-                    scanner.start(cameras[0]); // 使用第一個攝像頭
-                    // 顯示掃描器容器
-                    document.getElementById('scanner-container').style.display = 'block';
-                } else {
-                    alert('找不到攝像頭');
-                }
-            }).catch(function (error) {
-                console.error(error);
-            });
-        }
-
-        // 初始化攝像頭和掃描器
-        initializeScanner();
-        startCamera();
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]); // 使用第一個攝像頭
+                // 顯示掃描器容器
+                document.getElementById('scanner-container').style.display = 'block';
+            } else {
+                alert('找不到攝像頭');
+            }
+        }).catch(function (error) {
+            console.error(error);
+        });
 
         // 確認按鈕點擊事件
         document.getElementById('confirm-button').addEventListener('click', function () {
