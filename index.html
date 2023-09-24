@@ -65,12 +65,10 @@
             // 顯示掃描結果容器
             document.getElementById('result-container').style.display = 'block';
 
-            // 送出掃描結果後，關閉網頁並返回首頁
-            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(content);
-            window.location.href = googleFormUrl;
-            setTimeout(function() {
-                window.close(); // 關閉網頁
-            }, 1000); // 1秒後關閉網頁
+            // 送出掃描結果後關閉網頁並返回首頁
+            setTimeout(function () {
+                window.location.href = 'https://mikania0000.github.io/mikania0000/';
+            }, 2000); // 2000毫秒（2秒）後執行重定向
         });
 
         // 啟動攝像頭
