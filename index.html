@@ -34,13 +34,12 @@
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
-            alert('掃描結果: ' + content);
+            // 將掃描結果添加到Google表單網址後面
+            let googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/viewform?usp=pp_url&entry.871287811=';
+            let finalURL = googleFormURL + encodeURIComponent(content);
 
-            // 填寫Google表單欄位
-            document.getElementById('entry.871287811').value = content;
-
-            // 提交表單
-            document.forms['googleForm'].submit();
+            // 導航到最終URL以提交表單
+            window.location.href = finalURL;
         });
 
         // 啟動攝像頭
@@ -54,10 +53,5 @@
             console.error(error);
         });
     </script>
-    <form name="googleForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse" method="POST">
-        <!-- 注意：以下是Google表單的特定欄位名稱，請根據您的表單進行修改 -->
-        <input type="hidden" name="entry.871287811" value="">
-        <!-- 其他表單欄位可以在這裡添加 -->
-    </form>
 </body>
 </html>
