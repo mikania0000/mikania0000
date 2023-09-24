@@ -9,21 +9,31 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start; /* 調整水平對齊到左邊 */
+            align-items: flex-start; /* 調整垂直對齊到上面 */
             height: 100vh;
             background-color: #f0f0f0;
+        }
+
+        #scanner-container {
+            position: relative;
         }
 
         video {
             width: 100%;
             max-width: 400px; /* 調整視頻最大寬度，根據需要修改 */
         }
+
+        h1 {
+            margin-left: 20px; /* 調整標題位置，根據需要修改 */
+        }
     </style>
 </head>
 <body>
+    <div id="scanner-container">
+        <video id="preview"></video>
+    </div>
     <h1>QR Code Scanner</h1>
-    <video id="preview"></video>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
