@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner9</title>
+    <title>QR Code Scanner10</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -26,7 +26,6 @@
         video {
             width: 100%;
             height: auto;
-            transform: scaleX(-1); /* 水平翻轉鏡頭畫面 */
         }
 
         h1 {
@@ -40,14 +39,10 @@
         #submit-button {
             display: none; /* 初始隱藏提交按鈕 */
         }
-
-        #camera-select {
-            display: none; /* 初始隱藏攝像頭選擇列表 */
-        }
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner9</h1>
+    <h1>QR Code Scanner10</h1>
     
     <div id="scanner-container">
         <video id="preview" playsinline autoplay></video>
@@ -56,12 +51,7 @@
     <div id="result-container">
         <h2>Scan Result:</h2>
         <p id="scan-result"></p>
-        <button id="confirm-button">確定9</button>
-    </div>
-
-    <div id="camera-select">
-        <label for="camera-list">Select Camera:</label>
-        <select id="camera-list"></select>
+        <button id="confirm-button">確定10</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
@@ -69,7 +59,6 @@
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
         let scanResult = ''; // 用於存儲掃描結果
-        let activeCamera = null; // 用於存儲當前選擇的攝像頭
 
         // 初始化QR Code掃描器
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
@@ -85,35 +74,12 @@
             document.getElementById('confirm-button').style.display = 'block';
         });
 
-        // 列出所有攝像頭
+        // 啟動攝像頭
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
-                // 顯示攝像頭選擇列表
-                let cameraSelect = document.getElementById('camera-select');
-                let cameraList = document.getElementById('camera-list');
-
-                cameras.forEach(function (camera, index) {
-                    let option = document.createElement('option');
-                    option.value = index;
-                    option.text = camera.name;
-                    cameraList.appendChild(option);
-                });
-
-                cameraSelect.style.display = 'block';
-
-                // 攝像頭選擇變更事件
-                cameraList.addEventListener('change', function () {
-                    let selectedCameraIndex = parseInt(cameraList.value);
-                    if (!isNaN(selectedCameraIndex)) {
-                        if (activeCamera) {
-                            activeCamera.stop(); // 停止當前的攝像頭
-                        }
-                        activeCamera = cameras[selectedCameraIndex];
-                        scanner.start(activeCamera); // 使用選擇的攝像頭
-                        // 顯示掃描器容器
-                        document.getElementById('scanner-container').style.display = 'block';
-                    }
-                });
+                scanner.start(cameras[0]); // 使用第一個攝像頭
+                // 顯示掃描器容器
+                document.getElementById('scanner-container').style.display = 'block';
             } else {
                 alert('找不到攝像頭');
             }
