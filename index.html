@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner</title>
-    <!-- 引入instascan的JavaScript庫 -->
-    <script src="https://github.com/schmich/instascan"></script>
+    <title>Instascan Mobile Scanner</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* 自訂樣式可以在這裡添加 */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        video {
+            width: 100%;
+            max-width: 400px; /* 調整視頻最大寬度，根據需要修改 */
+        }
+    </style>
 </head>
 <body>
     <h1>QR Code Scanner</h1>
-    <!-- 顯示攝像頭畫面的區域 -->
     <video id="preview"></video>
-    <!-- 顯示掃描結果的區域 -->
-    <div id="result"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
-        // 獲取video元素和結果顯示區域的引用
-        let video = document.getElementById('preview');
-        let resultDiv = document.getElementById('result');
-
-        // 創建一個Scanner對象
-        let scanner = new Instascan.Scanner({ video: video });
+        // 初始化QR Code掃描器
+        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
-            // 顯示掃描結果在結果區域
-            resultDiv.innerText = '掃描結果: ' + content;
+            alert('掃描結果: ' + content);
         });
 
         // 啟動攝像頭
@@ -31,7 +42,7 @@
             if (cameras.length > 0) {
                 scanner.start(cameras[0]); // 使用第一個攝像頭
             } else {
-                console.error('找不到攝像頭');
+                alert('找不到攝像頭');
             }
         }).catch(function (error) {
             console.error(error);
