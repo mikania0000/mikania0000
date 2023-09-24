@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner</title>
+    <!-- 引入instascan庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/instascan@2.0.1/dist/instascan.min.js"></script>
 </head>
 <body>
-    <button id="startScan">Start Scanning</button>
-    <div id="qrResult"></div>
-    <script src="https://github.com/mikania0000/mikania0000/blob/main/script.js"></script>
+    <h1>QR Code Scanner</h1>
+    <!-- 用來顯示掃描的QR碼內容 -->
+    <div id="qr-result"></div>
+    
+    <!-- 按鈕來開啟掃描器 -->
+    <button onclick="startScanner()">開啟QR碼掃描器</button>
+
+    <script>
+        // 開啟QR碼掃描器
+        function startScanner() {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('qr-video') });
+            
+            // 監聽掃描事件
+            scanner.addListener('scan', function (content) {
+                // 將掃描的內容顯示在div中
+                document.getElementById('qr-result').textContent = content;
+            });
+
+            // 啟動掃描器
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+            });
+        }
+    </script>
 </body>
 </html>
