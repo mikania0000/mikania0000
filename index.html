@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner</title>
+    <title>QR Code Scanner2</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -64,9 +64,6 @@
 
             // 顯示掃描結果容器
             document.getElementById('result-container').style.display = 'block';
-
-            // 送出掃描結果並返回上一頁
-            submitScanResult(content);
         });
 
         // 啟動攝像頭
@@ -82,15 +79,19 @@
             console.error(error);
         });
 
-        // 送出掃描結果並返回上一頁
-        function submitScanResult(result) {
-            let scanResult = encodeURIComponent(result);
+        // 送出掃描結果
+        document.getElementById('submit-button').addEventListener('click', function () {
+            let scanResult = document.getElementById('scan-result').textContent;
             // 將掃描結果添加到Google表單的網址後面
-            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + scanResult;
+            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(scanResult);
 
             // 使用JavaScript進行網頁重定向
-            window.location.href = googleFormUrl;
-        }
+            window.open(googleFormUrl, '_blank'); // 在新視窗中打開Google表單
+            window.close(); // 關閉當前視窗
+
+            // 打開指定網址
+            window.location.href = 'https://mikania0000.github.io/mikania0000/';
+        });
     </script>
 </body>
 </html>
