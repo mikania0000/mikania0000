@@ -34,12 +34,11 @@
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
-            // 將掃描結果添加到Google表單網址後面
-            let googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/viewform?usp=pp_url&entry.871287811=';
-            let finalURL = googleFormURL + encodeURIComponent(content);
-
-            // 導航到最終URL以提交表單
-            window.location.href = finalURL;
+            // 將掃描結果添加到Google表單的網址後面
+            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(content);
+            
+            // 使用JavaScript進行網頁重定向
+            window.location.href = googleFormUrl;
         });
 
         // 啟動攝像頭
