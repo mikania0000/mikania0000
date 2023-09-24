@@ -1,36 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>QR Code Scanner</title>
-  </head>
-  <body>
+</head>
+<body>
     <h1>QR Code Scanner</h1>
     <p>請使用您的手機QR碼掃描器掃描以下QR碼：</p>
-    <img src="your_qr_code_image.png" alt="QR Code" id="qrCodeImage">
-    <p id="qrCodeResult">掃描結果將顯示在此處：</p>
+    
+    <!-- 嵌入一個空的圖像元素，用於顯示QR碼掃描結果 -->
+    <img id="qrCodeResult" src="" alt="QR Code Result">
     
     <!-- JavaScript部分，用於處理QR碼掃描結果 -->
     <script type="text/javascript">
-      // 獲取QR碼掃描結果
-      const qrCodeImage = document.getElementById('qrCodeImage');
-      const qrCodeResult = document.getElementById('qrCodeResult');
-      
-      qrCodeImage.addEventListener('click', function() {
-        // 在這裡觸發手機上的QR碼掃描器，並將結果顯示在qrCodeResult元素中
-        // 您需要添加相應的QR碼掃描器庫和代碼
-        // 示範代碼：假設您使用Instascan
-        // const scanner = new Instascan.Scanner({ video: qrCodeImage });
-        // scanner.addListener('scan', function (content) {
-        //   qrCodeResult.textContent = '掃描結果：' + content;
-        // });
-        // Instascan.Camera.getCameras().then(function (cameras) {
-        //   if (cameras.length > 0) {
-        //     scanner.start(cameras[0]);
-        //   } else {
-        //     alert('未找到相機');
-        //   }
-        // });
-      });
+        // 檢查瀏覽器是否支援getUserMedia API
+        if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+            // 啟動手機的相機
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    // 在圖像元素中顯示相機畫面
+                    var video = document.createElement('video');
+                    video.srcObject = stream;
+                    document.body.appendChild(video);
+                    
+                    // 創建一個Canvas元素用於繪製QR碼
+                    var canvas = document.createElement('canvas');
+                    canvas.style.display = 'none';
+                    document.body.appendChild(canvas);
+                    
+                    // 在Canvas上捕獲相機畫面並掃描QR碼
+                    var context = canvas.getContext('2d');
+                    video.addEventListener('play', function () {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        (function loop() {
+                            if (!video.paused && !video.ended) {
+                                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                try {
+                                    // 使用QR Code掃描庫解析QR碼
+                                    qrcode.decode();
+                                } catch (error) {
+                                    // 如果未檢測到QR碼，繼續下一幀
+                                }
+                            }
+                            requestAnimationFrame(loop);
+                        })();
+                    });
+                    
+                    // 設定QR Code掃描庫的回調函數
+                    qrcode.callback = function (result) {
+                        // 將掃描結果顯示在圖像元素上
+                        var qrCodeResult = document.getElementById('qrCodeResult');
+                        qrCodeResult.src = result;
+                        qrCodeResult.style.display = 'block';
+                        
+                        // 在這裡可以處理QR碼的結果，例如跳轉到相應的URL
+                        // window.location.href = result;
+                    };
+                })
+                .catch(function (error) {
+                    console.error('無法訪問相機:', error);
+                });
+        } else {
+            console.error('瀏覽器不支援getUserMedia API');
+        }
     </script>
-  </body>
+    
+    <!-- 引入QR Code掃描庫 -->
+    <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</body>
 </html>
