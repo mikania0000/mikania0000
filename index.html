@@ -2,70 +2,40 @@
 <html>
 <head>
     <title>QR Code Scanner</title>
+    <!-- 引入instascan的JavaScript庫 -->
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 </head>
 <body>
     <h1>QR Code Scanner</h1>
-    <p>請使用您的手機QR碼掃描器掃描以下QR碼：</p>
-    
-    <!-- 嵌入一個空的圖像元素，用於顯示QR碼掃描結果 -->
-    <img id="qrCodeResult" src="" alt="QR Code Result">
-    
-    <!-- JavaScript部分，用於處理QR碼掃描結果 -->
-    <script type="text/javascript">
-        // 檢查瀏覽器是否支援getUserMedia API
-        if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            // 啟動手機的相機
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    // 在圖像元素中顯示相機畫面
-                    var video = document.createElement('video');
-                    video.srcObject = stream;
-                    document.body.appendChild(video);
-                    
-                    // 創建一個Canvas元素用於繪製QR碼
-                    var canvas = document.createElement('canvas');
-                    canvas.style.display = 'none';
-                    document.body.appendChild(canvas);
-                    
-                    // 在Canvas上捕獲相機畫面並掃描QR碼
-                    var context = canvas.getContext('2d');
-                    video.addEventListener('play', function () {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        (function loop() {
-                            if (!video.paused && !video.ended) {
-                                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                try {
-                                    // 使用QR Code掃描庫解析QR碼
-                                    qrcode.decode();
-                                } catch (error) {
-                                    // 如果未檢測到QR碼，繼續下一幀
-                                }
-                            }
-                            requestAnimationFrame(loop);
-                        })();
-                    });
-                    
-                    // 設定QR Code掃描庫的回調函數
-                    qrcode.callback = function (result) {
-                        // 將掃描結果顯示在圖像元素上
-                        var qrCodeResult = document.getElementById('qrCodeResult');
-                        qrCodeResult.src = result;
-                        qrCodeResult.style.display = 'block';
-                        
-                        // 在這裡可以處理QR碼的結果，例如跳轉到相應的URL
-                        // window.location.href = result;
-                    };
-                })
-                .catch(function (error) {
-                    console.error('無法訪問相機:', error);
-                });
-        } else {
-            console.error('瀏覽器不支援getUserMedia API');
-        }
+    <!-- 顯示攝像頭畫面的區域 -->
+    <video id="preview"></video>
+    <!-- 顯示掃描結果的區域 -->
+    <div id="result"></div>
+
+    <script>
+        // 獲取video元素和結果顯示區域的引用
+        let video = document.getElementById('preview');
+        let resultDiv = document.getElementById('result');
+
+        // 創建一個Scanner對象
+        let scanner = new Instascan.Scanner({ video: video });
+
+        // 監聽掃描到QR Code事件
+        scanner.addListener('scan', function (content) {
+            // 顯示掃描結果在結果區域
+            resultDiv.innerText = '掃描結果: ' + content;
+        });
+
+        // 啟動攝像頭
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]); // 使用第一個攝像頭
+            } else {
+                console.error('找不到攝像頭');
+            }
+        }).catch(function (error) {
+            console.error(error);
+        });
     </script>
-    
-    <!-- 引入QR Code掃描庫 -->
-    <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </body>
 </html>
