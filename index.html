@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner3</title>
+    <title>QR Code Scanner4</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -35,48 +35,43 @@
         #result-container {
             display: none; /* 初始隱藏掃描結果容器 */
         }
+
+        #submit-button {
+            display: none; /* 初始隱藏提交按鈕 */
+        }
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner3</h1>
+    <h1>QR Code Scanner4</h1>
     
     <div id="scanner-container">
-        <video id="preview" playsinline></video>
+        <video id="preview"></video>
     </div>
 
     <div id="result-container">
         <h2>Scan Result:</h2>
         <p id="scan-result"></p>
-        <button id="submit-button">Submit3</button>
+        <button id="confirm-button">確定4</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script>
+        let scanResult = ''; // 用於存儲掃描結果
+
         // 初始化QR Code掃描器
-        let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
+        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
             // 顯示掃描結果
+            scanResult = content;
             document.getElementById('scan-result').textContent = content;
 
             // 顯示掃描結果容器
             document.getElementById('result-container').style.display = 'block';
-
-            // 開啟新視窗，將掃描結果送出
-            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(content);
-            let newWindow = window.open(googleFormUrl, '_blank');
-
-            // 等待1秒後關閉新視窗
-            setTimeout(function () {
-                if (newWindow) {
-                    newWindow.close();
-                }
-                // 打開指定的網址
-                window.location.href = 'https://mikania0000.github.io/mikania0000/';
-            }, 1000);
+            document.getElementById('confirm-button').style.display = 'block';
         });
 
         // 啟動攝像頭
@@ -90,6 +85,25 @@
             }
         }).catch(function (error) {
             console.error(error);
+        });
+
+        // 確認按鈕點擊事件
+        document.getElementById('confirm-button').addEventListener('click', function () {
+            // 建立新視窗
+            let popupWindow = window.open('', '_blank');
+
+            // 在新視窗中設定網址
+            popupWindow.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(scanResult);
+
+            // 關閉新視窗
+            setTimeout(function () {
+                popupWindow.close();
+            }, 3000); // 延遲3秒後關閉新視窗
+
+            // 打開指定的網址
+            setTimeout(function () {
+                window.location.href = 'https://mikania0000.github.io/mikania0000/';
+            }, 4000); // 延遲4秒後打開新網址
         });
     </script>
 </body>
