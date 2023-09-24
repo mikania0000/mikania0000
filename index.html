@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner2</title>
+    <title>QR Code Scanner3</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -38,7 +38,7 @@
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner2</h1>
+    <h1>QR Code Scanner3</h1>
     
     <div id="scanner-container">
         <video id="preview"></video>
@@ -47,7 +47,7 @@
     <div id="result-container">
         <h2>Scan Result:</h2>
         <p id="scan-result"></p>
-        <button id="submit-button">送出</button>
+        <button id="submit-button">Submit3</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
@@ -64,6 +64,19 @@
 
             // 顯示掃描結果容器
             document.getElementById('result-container').style.display = 'block';
+
+            // 開啟新視窗，將掃描結果送出
+            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(content);
+            let newWindow = window.open(googleFormUrl, '_blank');
+
+            // 等待1秒後關閉新視窗
+            setTimeout(function () {
+                if (newWindow) {
+                    newWindow.close();
+                }
+                // 打開指定的網址
+                window.location.href = 'https://mikania0000.github.io/mikania0000/';
+            }, 1000);
         });
 
         // 啟動攝像頭
@@ -77,20 +90,6 @@
             }
         }).catch(function (error) {
             console.error(error);
-        });
-
-        // 送出掃描結果
-        document.getElementById('submit-button').addEventListener('click', function () {
-            let scanResult = document.getElementById('scan-result').textContent;
-            // 將掃描結果添加到Google表單的網址後面
-            let googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(scanResult);
-
-            // 使用JavaScript進行網頁重定向
-            window.open(googleFormUrl, '_blank'); // 在新視窗中打開Google表單
-            window.close(); // 關閉當前視窗
-
-            // 打開指定網址
-            window.location.href = 'https://mikania0000.github.io/mikania0000/';
         });
     </script>
 </body>
