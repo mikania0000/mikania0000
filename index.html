@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>鳳甲國中新生報到掃描</title>
+    <title>QR Code Scanner</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         /* 自訂樣式可以在這裡添加 */
@@ -17,9 +17,10 @@
         }
 
         #scanner-container {
+            display: none; /* 初始隱藏掃描器容器 */
             position: relative;
-            width: 70%; /* 調整視頻寬度佔總畫面的80% */
-            max-width: 400px; /* 調整最大寬度 */
+            width: 70%; /* 調整掃描畫面佔滿70%的寬度 */
+            max-width: 400px; /* 調整視頻最大寬度，根據需要修改 */
         }
 
         video {
@@ -28,40 +29,29 @@
         }
 
         h1 {
-            margin-top: 20%; /* 調整標題佔總畫面的50% */
+            margin-top: 20px;
         }
 
         #result-container {
-            margin-top: 30px; /* 調整結果容器的上邊距 */
-            text-align: center;
-        }
-
-        #scan-result {
-            width: 20%; /* 調整掃描結果框寬度佔總畫面的40% */
-            font-size: 28px;
+            display: none; /* 初始隱藏掃描結果容器 */
         }
 
         #submit-button {
-            width: 20%; /* 調整確定按鈕寬度佔總畫面的40% */
-            font-size: 18px;
-            display: none;
-        }
-
-        #result-label {
-            width: 20%; /* 調整結果標籤寬度佔總畫面的30% */
+            display: none; /* 初始隱藏提交按鈕 */
+            width: 20%; /* 調整確定鈕佔20%的寬度 */
         }
     </style>
 </head>
 <body>
-    <h1>鳳甲國中新生報到掃描</h1>
+    <h1>QR Code Scanner</h1>
     
     <div id="scanner-container">
         <video id="preview" playsinline autoplay></video>
     </div>
 
     <div id="result-container">
-        <h2 id="result-label">掃描結果:</h2>
-        <input type="text" id="scan-result" placeholder="請掃描QR Code">
+        <h2>Scan Result:</h2>
+        <p id="scan-result"></p>
         <button id="confirm-button">確定</button>
     </div>
 
@@ -76,18 +66,13 @@
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
-            // 檢查掃描結果是否為5位數字
-            if (/^\d{5}$/.test(content)) {
-                // 顯示掃描結果
-                scanResult = content;
-                document.getElementById('scan-result').value = content;
+            // 顯示掃描結果
+            scanResult = content;
+            document.getElementById('scan-result').textContent = content;
 
-                // 顯示掃描結果容器和確定按鈕
-                document.getElementById('result-container').style.display = 'block';
-                document.getElementById('confirm-button').style.display = 'block';
-            } else {
-                alert('掃描結果不是5位數字');
-            }
+            // 顯示掃描結果容器
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('confirm-button').style.display = 'block';
         });
 
         // 啟動攝像頭
@@ -105,27 +90,4 @@
 
         // 確認按鈕點擊事件
         document.getElementById('confirm-button').addEventListener('click', function () {
-            // 檢查是否有掃描結果
-            if (scanResult) {
-                // 建立新視窗
-                let popupWindow = window.open('', '_blank');
-
-                // 在新視窗中設定網址
-                popupWindow.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSdx5NCq656pgxf7mWdJ52vefFP0V4xA74mBO93w0BAaa9-eFw/formResponse?usp=pp_url&entry.871287811=' + encodeURIComponent(scanResult);
-
-                // 關閉新視窗
-                setTimeout(function () {
-                    popupWindow.close();
-                }, 1000); // 延遲3秒後關閉新視窗
-
-                // 打開指定的網址
-                setTimeout(function () {
-                    window.location.href = 'https://mikania0000.github.io/mikania0000/';
-                }, 2000); // 延遲4秒後打開新網址
-            } else {
-                alert('請先掃描QR Code');
-            }
-        });
-    </script>
-</body>
-</html>
+            // 建立新視窗
