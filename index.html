@@ -17,10 +17,8 @@
         }
 
         #scanner-container {
-            display: none; /* 初始隱藏掃描器容器 */
             position: relative;
-            width: 100%;
-            max-width: 400px; /* 調整視頻最大寬度，根據需要修改 */
+            width: 50%; /* 調整視頻寬度為總畫面的50% */
         }
 
         video {
@@ -33,15 +31,20 @@
         }
 
         #result-container {
-            display: none; /* 初始隱藏掃描結果容器 */
+            text-align: center; /* 文字居中對齊 */
+            margin-top: 20px;
+        }
+
+        #scan-result {
+            font-size: 28px;
+            width: 100%; /* 文字框寬度為100% */
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         #submit-button {
-            display: none; /* 初始隱藏提交按鈕 */
-            font-size: 30px; /* 調整確定按鈕字型大小 */
-        }
-        #scan-result {
-            font-size: 28px; /* 調整掃描結果字型大小 */
+            display: none;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -54,7 +57,7 @@
 
     <div id="result-container">
         <h2>掃描結果:</h2>
-        <p id="scan-result"></p>
+        <textarea id="scan-result" readonly></textarea> <!-- 使用<textarea>元素來顯示掃描結果 -->
         <button id="confirm-button">確定</button>
     </div>
 
@@ -71,7 +74,7 @@
         scanner.addListener('scan', function (content) {
             // 顯示掃描結果
             scanResult = content;
-            document.getElementById('scan-result').textContent = content;
+            document.getElementById('scan-result').value = content;
 
             // 顯示掃描結果容器
             document.getElementById('result-container').style.display = 'block';
@@ -102,7 +105,7 @@
             // 關閉新視窗
             setTimeout(function () {
                 popupWindow.close();
-            }, 1000); // 延遲3秒後關閉新視窗
+            }, 1000); // 延遲3秒後關閉新窗口
 
             // 打開指定的網址
             setTimeout(function () {
