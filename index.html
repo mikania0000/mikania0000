@@ -17,8 +17,9 @@
         }
 
         #scanner-container {
-            width: 80%; /* 控制QR Code掃描畫面佔總畫面的80% */
-            max-width: 400px; /* 調整視頻最大寬度，根據需要修改 */
+            position: relative;
+            width: 80%; /* 調整視頻寬度佔總畫面的80% */
+            max-width: 400px; /* 調整最大寬度 */
         }
 
         video {
@@ -27,22 +28,27 @@
         }
 
         h1 {
-            margin-top: 20px;
+            margin-top: 50%; /* 調整標題佔總畫面的50% */
         }
 
         #result-container {
-            display: none; /* 初始隱藏掃描結果容器 */
+            margin-top: 30px; /* 調整結果容器的上邊距 */
+            text-align: center;
         }
 
         #scan-result {
-            font-size: 28px; /* 調整掃描結果字型大小 */
-            width: 100%; /* 文字框寬度100% */
+            width: 40%; /* 調整掃描結果框寬度佔總畫面的40% */
+            font-size: 28px;
         }
 
-        #confirm-button {
-            font-size: 28px; /* 調整確定按鈕字型大小，與文字框一樣大 */
-            width: 100%; /* 確定按鈕寬度100% */
-            margin-top: 20px; /* 增加確定按鈕上方的間距 */
+        #submit-button {
+            width: 40%; /* 調整確定按鈕寬度佔總畫面的40% */
+            font-size: 18px;
+            display: none;
+        }
+
+        #result-label {
+            width: 30%; /* 調整結果標籤寬度佔總畫面的30% */
         }
     </style>
 </head>
@@ -54,8 +60,8 @@
     </div>
 
     <div id="result-container">
-        <h2>掃描結果:</h2>
-        <input type="text" id="scan-result" placeholder="請掃描QR Code" />
+        <h2 id="result-label">掃描結果:</h2>
+        <input type="text" id="scan-result" placeholder="請掃描QR Code">
         <button id="confirm-button">確定</button>
     </div>
 
@@ -70,15 +76,17 @@
 
         // 監聽掃描到QR Code事件
         scanner.addListener('scan', function (content) {
-            // 檢查掃描結果是否為5碼數字
+            // 檢查掃描結果是否為5位數字
             if (/^\d{5}$/.test(content)) {
                 // 顯示掃描結果
                 scanResult = content;
                 document.getElementById('scan-result').value = content;
 
-                // 顯示掃描結果容器
+                // 顯示掃描結果容器和確定按鈕
                 document.getElementById('result-container').style.display = 'block';
                 document.getElementById('confirm-button').style.display = 'block';
+            } else {
+                alert('掃描結果不是5位數字');
             }
         });
 
@@ -97,8 +105,8 @@
 
         // 確認按鈕點擊事件
         document.getElementById('confirm-button').addEventListener('click', function () {
-            // 檢查是否有掃描結果且為5碼數字
-            if (scanResult && /^\d{5}$/.test(scanResult)) {
+            // 檢查是否有掃描結果
+            if (scanResult) {
                 // 建立新視窗
                 let popupWindow = window.open('', '_blank');
 
@@ -115,7 +123,7 @@
                     window.location.href = 'https://mikania0000.github.io/mikania0000/';
                 }, 2000); // 延遲4秒後打開新網址
             } else {
-                alert('請先掃描有效的5碼數字QR Code');
+                alert('請先掃描QR Code');
             }
         });
     </script>
